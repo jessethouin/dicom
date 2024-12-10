@@ -1,14 +1,12 @@
 import fs from "fs";
 import dicomjs from "dicom.ts"
-import {TagTupleID, TagValue} from "dicom.ts/dist/parser/tag";
+import {TagTupleID} from "dicom.ts/dist/parser/tag";
 import dicomParser from "dicom-parser";
 import dcmjsImaging from 'dcmjs-imaging';
 import {encode} from "fast-png";
-import {DicomData, DicomImage, DICOMTag} from "./types";
-import {tags} from "./DICOMTags";
-
-export const chunkDir = __dirname + "/chunks";
-const mergedFilePath = __dirname + "/merged_files";
+import {DicomData, DicomImage} from "./types";
+import {chunkDir, imageNotFound, mergedFilePath} from "../index";
+import {tags} from "./dicomTags";
 
 export const mergeChunks = async (fileName: string, totalChunks: number) => {
     if (!fs.existsSync(mergedFilePath)) {
@@ -60,7 +58,7 @@ export const getDICOMImage = async (fileName: string): Promise<DicomImage | unde
     try {
         const buffer = await fs.promises.readFile(`${mergedFilePath}/${fileName}`);
 
-        const {DicomImage, WindowLevel, NativePixelDecoder} = dcmjsImaging;
+        const {DicomImage} = dcmjsImaging;
         const image = new DicomImage(
             buffer.buffer.slice(
                 buffer.byteOffset,
@@ -79,7 +77,7 @@ export const getDICOMImage = async (fileName: string): Promise<DicomImage | unde
         return {image: `${mergedFilePath}/${fileName}.png`};
     } catch (e: any) {
         console.error(e.message);
-        return {image: `${mergedFilePath}/image-not-found.png`};
+        return {image: imageNotFound};
     }
 }
 

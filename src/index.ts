@@ -4,7 +4,11 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import fs from "fs";
 import multer from "multer";
-import {chunkDir, convertToHex, convertToTag, getDICOMDataFromString, getDICOMDataFromTuple, getDICOMImage, mergeChunks, validateDICOMTag, validateDICOMTuple} from "./utils";
+import {convertToHex, convertToTag, getDICOMDataFromString, getDICOMDataFromTuple, getDICOMImage, mergeChunks, validateDICOMTag, validateDICOMTuple} from "./utils/utils";
+
+export const chunkDir = __dirname + "/chunks";
+export const mergedFilePath = __dirname + "/merged_files";
+export const imageNotFound = __dirname + "/images/image-not-found.png";
 
 dotenv.config();
 
