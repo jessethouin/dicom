@@ -73,7 +73,7 @@ export const app: Express = express();
 const initServer = async () => {
     const storage = multer.memoryStorage();
     const upload = multer({storage: storage});
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 3030;
 
     app.use(cors());
     app.use(bodyParser.json());
