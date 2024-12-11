@@ -1,0 +1,13 @@
+diff --git a/node_modules/dicom.ts/package.json b/node_modules/dicom.ts/package.json
+index b8a8c05..dcaed1d 100644
+--- a/node_modules/dicom.ts/package.json
++++ b/node_modules/dicom.ts/package.json
+@@ -29,7 +29,7 @@
+   "exports": {
+     "require": {
+       "types": "./dist/index.d.ts",
+-      "default": "./dist/index.js"
++      "default": "./dist/index.cjs"
+     },
+     "default": {
+       "types": "./dist/index.d.ts",
