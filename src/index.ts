@@ -68,8 +68,9 @@ export type PostFileSpec = Tspec.DefineApiSpec<{
 
 dotenv.config();
 
+export const app: Express = express();
+
 const initServer = async () => {
-    const app: Express = express();
     const storage = multer.memoryStorage();
     const upload = multer({storage: storage});
     const port = process.env.PORT || 3000;
@@ -81,7 +82,6 @@ const initServer = async () => {
     const a = await TspecDocsMiddleware({ openapi: { title: "DICOM Image Viewer", version: "1.0.0" } });
     // @ts-ignore
     app.use("/docs", a);
-
     app.get("/image/fileName/:fileName", controller.getImage);
     app.get("/tag/fileName/:fileName/group/:group/element/:element", controller.getTagValueFromGroupAndElement);
     app.get("/tag/fileName/:fileName/tag/:tag", controller.getTagValueFromFullTag);
