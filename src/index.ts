@@ -1,4 +1,4 @@
-import express, {Express, Request, Response, RequestHandler} from "express";
+import express, {Express} from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
@@ -11,6 +11,7 @@ export const chunkDir = __dirname + "/chunks";
 export const mergedFilePath = __dirname + "/merged_files";
 export const imageNotFound = __dirname + "/images/image-not-found.png";
 
+//noinspection JSUnusedGlobalSymbols
 export type GetImageApiSpec = Tspec.DefineApiSpec<{
     paths: {
         "/image/fileName/{fileName}": {
@@ -22,6 +23,7 @@ export type GetImageApiSpec = Tspec.DefineApiSpec<{
     },
 }>;
 
+//noinspection JSUnusedGlobalSymbols
 export type GetTagValueFromFullTagSpec = Tspec.DefineApiSpec<{
     paths: {
         "/tag/fileName/{fileName}/tag/{tag}": {
@@ -33,6 +35,7 @@ export type GetTagValueFromFullTagSpec = Tspec.DefineApiSpec<{
     },
 }>;
 
+//noinspection JSUnusedGlobalSymbols
 export type GetTagValueFromGroupAndElementSpec = Tspec.DefineApiSpec<{
     paths: {
         "/tag/fileName/{fileName}/group/{group}/element/{element}": {
@@ -44,6 +47,7 @@ export type GetTagValueFromGroupAndElementSpec = Tspec.DefineApiSpec<{
     },
 }>;
 
+//noinspection JSUnusedGlobalSymbols
 export type PostFileSpec = Tspec.DefineApiSpec<{
     paths: {
         "/upload": {
@@ -66,24 +70,22 @@ dotenv.config();
 
 const initServer = async () => {
     const app: Express = express();
-
     const storage = multer.memoryStorage();
     const upload = multer({storage: storage});
-
     const port = process.env.PORT || 3000;
 
     app.use(cors());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
 
+    const a = await TspecDocsMiddleware({ openapi: { title: "DICOM Image Viewer", version: "1.0.0" } });
+    // @ts-ignore
+    app.use("/docs", a);
+
     app.get("/image/fileName/:fileName", controller.getImage);
     app.get("/tag/fileName/:fileName/group/:group/element/:element", controller.getTagValueFromGroupAndElement);
     app.get("/tag/fileName/:fileName/tag/:tag", controller.getTagValueFromFullTag);
     app.post("/upload", upload.single("file"), controller.postFile);
-
-    const a = await TspecDocsMiddleware({ openapi: { title: "DICOM Image Viewer", version: "1.0.0" } });
-    // @ts-ignore
-    app.use('/docs', a);
 
     app.listen(port, () => {
         console.log(`[server]: Server is running at http://localhost:${port}`);
